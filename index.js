@@ -41,7 +41,19 @@ async function run() {
         const userCollection = client.db('socialbook').collection('users');
         const postCollection = client.db('socialbook').collection('posts');
 
+        app.get('/posts', async (req, res) => {
+            const query = {}
+            const cursor = postCollection.find(query);
+            const posts = await cursor.toArray();
+            res.send(posts);
+        });
 
+        app.get('/users', async (req, res) => {
+            const query = {}
+            const cursor = userCollection.find(query);
+            const posts = await cursor.toArray();
+            res.send(posts);
+        });
 
 
     }
