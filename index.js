@@ -66,10 +66,20 @@ async function run() {
 
         app.get('/oneuser', async (req, res) => {
             const mail = req.query.email;
+            console.log(mail)
             const query = {};
             const users = await userCollection.find(query).toArray();
             const user = users.filter(n => n.email === mail);
             res.send(user);
+        })
+
+        app.get('/onepost/:_id', async (req, res) => {
+            const id = req.query._id;
+            console.log(id)
+            const query = { _id: ObjectId(id) };
+            const selectedPost = await postCollection.findOne(query);
+            console.log(selectedPost)
+            res.send(selectedPost);
         })
 
         app.post('/user', async (req, res) => {
@@ -83,6 +93,13 @@ async function run() {
             const post = req.body;
             console.log(post);
             const result = await postCollection.insertOne(post);
+            res.send(result);
+        });
+
+        app.put('/comment', async (req, res) => {
+            const post = req.body;
+            console.log(post);
+            const result = await postCollection.comments.updateOne(post);
             res.send(result);
         });
 
