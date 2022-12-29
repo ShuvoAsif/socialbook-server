@@ -4,7 +4,7 @@ require('dotenv').config();
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const port = process.env.PORT || 5000;
 
 app.use(cors());
@@ -54,6 +54,23 @@ async function run() {
             const posts = await cursor.toArray();
             res.send(posts);
         });
+
+        app.get('/posts/:_id', async (req, res) => {
+            const id = req.params._id;
+            const query = { _id: ObjectId(id) };
+            const selectedPost = await postCollection.findOne(query);
+            console.log(selectedPost)
+            res.send(selectedPost);
+        });
+
+
+        app.get('/oneuser', async (req, res) => {
+            const mail = req.query.email;
+            const query = {};
+            const users = await userCollection.find(query).toArray();
+            const user = users.filter(n => n.email === mail);
+            res.send(user);
+        })
 
         app.post('/user', async (req, res) => {
             const user = req.body;
