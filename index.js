@@ -96,11 +96,17 @@ async function run() {
             res.send(result);
         });
 
-        app.put('/comment', async (req, res) => {
+        app.put('/comment/:_id', async (req, res) => {
+            const id = req.params._id;
+            console.log(id);
             const post = req.body;
             console.log(post);
-            const result = await postCollection.comments.updateOne(post);
+            const result = await postCollection.updateOne(
+                { _id: ObjectId(id) },
+                { $push: { comments: post } }
+            );
             res.send(result);
+            console.log(result);
         });
 
 
