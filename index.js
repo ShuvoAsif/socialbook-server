@@ -63,6 +63,22 @@ async function run() {
             res.send(selectedPost);
         });
 
+        app.get('/islike', async (req, res) => {
+            const mail = req.query.email;
+            console.log(mail);
+            const post = await postCollection.find(
+                { likes: [mail] }
+            ).toArray();
+            console.log(post)
+            if (post.length) {
+                res.send([{ liked: true }]);
+            }
+            else {
+                res.send([{ liked: false }]);
+            }
+            console.log(post)
+        });
+
 
         app.get('/oneuser', async (req, res) => {
             const mail = req.query.email;
@@ -104,6 +120,19 @@ async function run() {
             const result = await postCollection.updateOne(
                 { _id: ObjectId(id) },
                 { $push: { comments: post } }
+            );
+            res.send(result);
+            console.log(result);
+        });
+
+        app.put('/like/:_id', async (req, res) => {
+            const id = req.params._id;
+            console.log(id);
+            const like = req.body;
+            console.log(post);
+            const result = await postCollection.updateOne(
+                { _id: ObjectId(id) },
+                { $push: { comments: like } }
             );
             res.send(result);
             console.log(result);
